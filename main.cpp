@@ -31,36 +31,33 @@
 
 #include "string_func_operation.h"
 
-const int MaxLines = 5000;
-
 ///////////////////////////////////////////////////////////////
 /// @param nlines 	Number of lines read
 /// @param lineptr	Pointer to a string
 ///////////////////////////////////////////////////////////////
 int main()
 {
-	char *lineptr[MaxLines] = {};
+    struct paramStr string[5000] = {};
+    struct paramStr *ptrStr = string;
+
 	int nlines = 0;
 
 	FILE * ptrFile = fopen ("inputFile.txt", "r");
 
 	if (ptrFile == NULL) 
-        {
+    {
   		printf ("Error opening files!\n");
         return 1;
-        }
+    }
 
-    nlines = readlines (lineptr, ptrFile);
+    nlines = readlines (ptrStr, ptrFile);
 
     fclose (ptrFile);
 
-    qsort        (lineptr, nlines - 1, &isEqString);
-    writelines   (lineptr, nlines - 1);
+    qsort        (ptrStr, nlines - 1, &cmpFromBegin);
+    writelines   (ptrStr, nlines - 1);
 
-    clearBuffer  (lineptr, nlines);
+    clearBuffer  (ptrStr, nlines);
 
 	return 0;
 }
-
-
-

@@ -3,12 +3,14 @@
 
 #include "string_func_operation.h"
 
+
+
 size_t getlineFile(char** string, FILE* stream)
 {
 	char incomingSymbol = 0;
 	unsigned counterMass = 0;
 
-	if (stream == nullptr || string == nullptr)
+	if (stream == nullptr)
 	{
 		printf("Error: file or incoming string not found!");
 
@@ -32,32 +34,25 @@ size_t getlineFile(char** string, FILE* stream)
 }
 
 
-int readlines(char* lineptr[], FILE *stream)
+int readlines(struct paramStr *p, FILE *stream)
 {
 	int len = 0;
 	int nlines = 0;
-	char** string;
+	char** string = (char**) calloc(1, sizeof(char));
 
 	while ((len = getlineFile(string, stream)) > 0)
 	{
-		if (*string == NULL)
-		{
-			printf("Error! Adress of string in readlines(); not found!");
-			return -1;
-		}
-		else
-		{
 			(*string)[len] = '\0';
 
-			lineptr[nlines++] = *string;
-		}
+			(*(p + nlines)).lineptr = *string;
+			nlines++;
 	}
 
 	return nlines;
 }
 
 
-int isEqString (char* firstLinePtr, char* secondLinePtr)
+int cmpFromBegin (const char* firstLinePtr, const char* secondLinePtr)
 {
 	int i = 0;
 
@@ -72,39 +67,42 @@ int isEqString (char* firstLinePtr, char* secondLinePtr)
 	return firstLinePtr[i] - secondLinePtr[i];
 }
 
-void swap (char* lineptr[], int adressFirstString, int adressSecondString)
-{
-	char* temp = lineptr[adressSecondString];
 
-	lineptr[adressSecondString] = lineptr[adressFirstString];
-	lineptr[adressFirstString] = temp;
+void swap (struct paramStr *p, int adressFirstString, int adressSecondString)
+{
+	char* temp = (*(p + adressSecondString)).lineptr;
+
+	(*(p + adressSecondString)).lineptr = (*(p + adressFirstString)).lineptr;
+	(*(p + adressFirstString)).lineptr = temp;
 }
 
-void qsort (char* lineptr[], int nlines, int (*cmpFunc) (char*, char*))
+
+void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (const char*, const char*))
 {
 	for (int i = 0; i < nlines - 1; i++)
 	{
 		for (int j = 0; j < nlines - 1; j++)
 		{
-			if ((*cmpFunc) (lineptr[j], lineptr[j + 1]) > 0)
+			if ((*cmpFunc) ((*(p+j)).lineptr, (*(p+j+1)).lineptr) > 0)
 			{
-				swap(lineptr, j + 1, j);
+				swap(p, j + 1, j);
 			}
 		}
 	}
 }
 
 
-void writelines(char* lineptr[], int nlines)
+void writelines(struct paramStr *p, int nlines)
 {	
 	for (int i = 0; i < nlines; i++)
-		printf("%s\n", lineptr[i]);
+		printf("%s\n", (*(p+i)).lineptr);
 }	
-		
-void clearBuffer(char* lineptr[], int nlines)
+	
+
+void clearBuffer(struct paramStr *p, int nlines)
 {				
 	for (int i = 0; i < nlines; i++)
 	{
-		free(lineptr[i]);
+		free((*(p + i)).lineptr);
 	}
 }

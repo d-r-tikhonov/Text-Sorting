@@ -1,6 +1,11 @@
 #ifndef __STRING_FUNC_OPERATION__
 #define __STRING_FUNC_OPERATION__
 
+struct paramStr
+{
+    char* lineptr;
+    int   countSymb;
+};
 
 ///////////////////////////////////////////////////////////////
 /// @brief 				Reads characters from the input stream, allocates space for them
@@ -18,7 +23,7 @@ size_t getlineFile(char **string, FILE *stream);
 /// @return 					NULL, in case of equality
 /// @return 					positive value if the first row is higher in order than the second; negative value otherwise
 ///////////////////////////////////////////////////////////////
-int isEqString (char* firstLinePtr, char* secondLinePtr);
+int cmpFromBegin (const char* firstLinePtr, const char* secondLinePtr);
 
 
 ///////////////////////////////////////////////////////////////
@@ -27,7 +32,7 @@ int isEqString (char* firstLinePtr, char* secondLinePtr);
 /// @param[in] adressFirstString 	Address of the first line
 /// @param[in] adressSecondString	Address of the second line
 ///////////////////////////////////////////////////////////////
-void swap (char* lineptr[], int adressFirstString, int adressSecondString);
+void swap (struct paramStr *p, int adressFirstString, int adressSecondString);
 
 
 ///////////////////////////////////////////////////////////////
@@ -35,7 +40,7 @@ void swap (char* lineptr[], int adressFirstString, int adressSecondString);
 /// @param[in] lineptr				Array of pointers to strings	
 /// @param[in] adressFirstString 	Number of rows
 ///////////////////////////////////////////////////////////////
-void qsort (char* lineptr[], int nlines, int (*cmpFunc) (char*, char*));
+void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (const char*, const char*));
 
 
 ///////////////////////////////////////////////////////////////
@@ -44,7 +49,7 @@ void qsort (char* lineptr[], int nlines, int (*cmpFunc) (char*, char*));
 /// @param[in] nlines 	Number of lines read
 /// @return 			Number of lines read
 ///////////////////////////////////////////////////////////////
-int readlines (char* lineptr[], FILE *stream);
+int readlines (struct paramStr *p, FILE *stream);
 
 
 ///////////////////////////////////////////////////////////////
@@ -52,7 +57,7 @@ int readlines (char* lineptr[], FILE *stream);
 /// @param[in] lineptr	Array of pointers		
 /// @param[in] nlines 	Number of lines read
 ///////////////////////////////////////////////////////////////
-void writelines (char* lineptr[], int nlines);
+void writelines (struct paramStr *p, int nlines);
 
 
 ///////////////////////////////////////////////////////////////
@@ -60,7 +65,7 @@ void writelines (char* lineptr[], int nlines);
 /// @param[in] lineptr	Array of pointers		
 /// @param[in] nlines 	Number of lines read
 ///////////////////////////////////////////////////////////////
-void clearBuffer(char* lineptr[], int nlines);
+void clearBuffer(struct paramStr *p, int nlines);
 
 
 #endif
