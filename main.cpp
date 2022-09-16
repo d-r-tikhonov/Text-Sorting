@@ -18,7 +18,7 @@
 /*! \page authors 	Authors of the program
  * 
 *   \authors 		Tikhonov D.R.
-* 	\version 		1.3
+* 	\version 		1.4
 * 	\date 			September, 2022
 * 	\bug 			not found yet.
 * 	\warning 		There are no such.

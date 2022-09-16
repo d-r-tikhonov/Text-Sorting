@@ -21,12 +21,16 @@ size_t getlineFile(char** string, FILE* stream)
 
 	while ((incomingSymbol = getc(stream)) != '\n' && incomingSymbol != EOF)
 	{
+
 		(*string)[counterMass] = incomingSymbol; 
 
 		counterMass++;
 
-		*string = (char*) realloc(*string, (counterMass + 1)* sizeof(char));
+		*string = (char*) realloc(*string, (counterMass + 1) * sizeof(char));
 	}
+
+	if (incomingSymbol == '\n' && counterMass == 0)
+		counterMass = 1;
 
 	(*string)[counterMass] = '\0';
 
@@ -94,14 +98,14 @@ void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (const char*, const c
 
 void writelines(struct paramStr *p, int nlines)
 {	
-	for (int i = 0; i < nlines; i++)
+	for (int i = 0; i <= nlines; i++)
 		printf("%s\n", (*(p+i)).lineptr);
 }	
 	
 
 void clearBuffer(struct paramStr *p, int nlines)
 {				
-	for (int i = 0; i < nlines; i++)
+	for (int i = 0; i <= nlines; i++)
 	{
 		free((*(p + i)).lineptr);
 	}
