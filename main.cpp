@@ -18,7 +18,7 @@
 /*! \page authors 	Authors of the program
  * 
 *   \authors 		Tikhonov D.R.
-* 	\version 		1.2
+* 	\version 		1.3
 * 	\date 			September, 2022
 * 	\bug 			not found yet.
 * 	\warning 		There are no such.
@@ -29,10 +29,9 @@
 
 #include <stdio.h>
 
-#include "read_and_write_func.h"
 #include "string_func_operation.h"
 
-const unsigned MaxLines = 5000;
+const int MaxLines = 5000;
 
 ///////////////////////////////////////////////////////////////
 /// @param nlines 	Number of lines read
@@ -40,23 +39,28 @@ const unsigned MaxLines = 5000;
 ///////////////////////////////////////////////////////////////
 int main()
 {
-	char *lineptr[MaxLines];
+	char *lineptr[MaxLines] = {};
 	int nlines = 0;
 
 	FILE * ptrFile = fopen ("inputFile.txt", "r");
 
 	if (ptrFile == NULL) 
-  		printf("Error opening files!\n");
-   	else
-   	{
-   		nlines = readlines(lineptr, ptrFile);
+        {
+  		printf ("Error opening files!\n");
+        return 1;
+        }
 
-		qsort(lineptr, nlines - 1);
+    nlines = readlines (lineptr, ptrFile);
 
-		writelines(lineptr, nlines - 1);
+    fclose (ptrFile);
 
-		fclose(ptrFile);
+    qsort        (lineptr, nlines - 1, &isEqString);
+    writelines   (lineptr, nlines - 1);
 
-		return 0;
-	}
+    clearBuffer  (lineptr, nlines);
+
+	return 0;
 }
+
+
+

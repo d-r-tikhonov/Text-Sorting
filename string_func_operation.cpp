@@ -17,7 +17,7 @@ size_t getlineFile(char** string, FILE* stream)
 	
 	*string = (char*) calloc(1, sizeof(char));
 
-	while( (incomingSymbol = getc(stream)) != '\n' && incomingSymbol != EOF )
+	while ((incomingSymbol = getc(stream)) != '\n' && incomingSymbol != EOF)
 	{
 		(*string)[counterMass] = incomingSymbol; 
 
@@ -31,7 +31,33 @@ size_t getlineFile(char** string, FILE* stream)
 	return counterMass;
 }
 
-int isEqString(char* firstLinePtr, char* secondLinePtr)
+
+int readlines(char* lineptr[], FILE *stream)
+{
+	int len = 0;
+	int nlines = 0;
+	char** string;
+
+	while ((len = getlineFile(string, stream)) > 0)
+	{
+		if (*string == NULL)
+		{
+			printf("Error! Adress of string in readlines(); not found!");
+			return -1;
+		}
+		else
+		{
+			(*string)[len] = '\0';
+
+			lineptr[nlines++] = *string;
+		}
+	}
+
+	return nlines;
+}
+
+
+int isEqString (char* firstLinePtr, char* secondLinePtr)
 {
 	int i = 0;
 
@@ -39,14 +65,14 @@ int isEqString(char* firstLinePtr, char* secondLinePtr)
 	{
 		if (firstLinePtr[i] == '\n')
 		{
-			return 0;
+			break;
 		}
 	}
 
 	return firstLinePtr[i] - secondLinePtr[i];
 }
 
-void swap(char* lineptr[], int adressFirstString, int adressSecondString)
+void swap (char* lineptr[], int adressFirstString, int adressSecondString)
 {
 	char* temp = lineptr[adressSecondString];
 
@@ -54,16 +80,31 @@ void swap(char* lineptr[], int adressFirstString, int adressSecondString)
 	lineptr[adressFirstString] = temp;
 }
 
-void qsort(char* lineptr[], int nlines)
+void qsort (char* lineptr[], int nlines, int (*cmpFunc) (char*, char*))
 {
 	for (int i = 0; i < nlines - 1; i++)
 	{
 		for (int j = 0; j < nlines - 1; j++)
 		{
-			if (isEqString(lineptr[j], lineptr[j + 1]) > 0)
+			if ((*cmpFunc) (lineptr[j], lineptr[j + 1]) > 0)
 			{
 				swap(lineptr, j + 1, j);
 			}
 		}
+	}
+}
+
+
+void writelines(char* lineptr[], int nlines)
+{	
+	for (int i = 0; i < nlines; i++)
+		printf("%s\n", lineptr[i]);
+}	
+		
+void clearBuffer(char* lineptr[], int nlines)
+{				
+	for (int i = 0; i < nlines; i++)
+	{
+		free(lineptr[i]);
 	}
 }

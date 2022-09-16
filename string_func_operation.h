@@ -18,7 +18,7 @@ size_t getlineFile(char **string, FILE *stream);
 /// @return 					NULL, in case of equality
 /// @return 					positive value if the first row is higher in order than the second; negative value otherwise
 ///////////////////////////////////////////////////////////////
-int isEqString(char* firstLinePtr, char* secondLinePtr);
+int isEqString (char* firstLinePtr, char* secondLinePtr);
 
 
 ///////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ int isEqString(char* firstLinePtr, char* secondLinePtr);
 /// @param[in] adressFirstString 	Address of the first line
 /// @param[in] adressSecondString	Address of the second line
 ///////////////////////////////////////////////////////////////
-void swap(char* lineptr[], int adressFirstString, int adressSecondString);
+void swap (char* lineptr[], int adressFirstString, int adressSecondString);
 
 
 ///////////////////////////////////////////////////////////////
@@ -35,7 +35,32 @@ void swap(char* lineptr[], int adressFirstString, int adressSecondString);
 /// @param[in] lineptr				Array of pointers to strings	
 /// @param[in] adressFirstString 	Number of rows
 ///////////////////////////////////////////////////////////////
-void qsort(char* lineptr[], int nlines);
+void qsort (char* lineptr[], int nlines, int (*cmpFunc) (char*, char*));
+
+
+///////////////////////////////////////////////////////////////
+/// @brief 				Reading lines from the input stream
+/// @param[in] lineptr	Array of pointers		
+/// @param[in] nlines 	Number of lines read
+/// @return 			Number of lines read
+///////////////////////////////////////////////////////////////
+int readlines (char* lineptr[], FILE *stream);
+
+
+///////////////////////////////////////////////////////////////
+/// @brief 				Output of ordered strings
+/// @param[in] lineptr	Array of pointers		
+/// @param[in] nlines 	Number of lines read
+///////////////////////////////////////////////////////////////
+void writelines (char* lineptr[], int nlines);
+
+
+///////////////////////////////////////////////////////////////
+/// @brief 				To clear the buffer
+/// @param[in] lineptr	Array of pointers		
+/// @param[in] nlines 	Number of lines read
+///////////////////////////////////////////////////////////////
+void clearBuffer(char* lineptr[], int nlines);
 
 
 #endif
