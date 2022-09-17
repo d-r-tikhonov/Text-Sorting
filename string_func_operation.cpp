@@ -10,7 +10,7 @@ size_t getlineFile(char** string, FILE* stream)
 	char incomingSymbol = 0;
 	unsigned counterMass = 0;
 
-	if (stream == nullptr)
+	if (stream == nullptr || string == nullptr)
 	{
 		printf("Error: file or incoming string not found!");
 
@@ -40,15 +40,14 @@ size_t getlineFile(char** string, FILE* stream)
 
 int readlines(struct paramStr *p, FILE *stream)
 {
-	int len = 0;
 	int nlines = 0;
+	int len = 0;
 	char** string = (char**) calloc(1, sizeof(char));
 
-	while ((len = getlineFile(string, stream)) > 0)
+	while (len = getlineFile(string, stream) > 0)
 	{
-			(*string)[len] = '\0';
-
-			(*(p + nlines)).lineptr = *string;
+			(*(p + nlines)).lineptr   = *string;
+			(*(p + nlines)).countSymb = len;
 			nlines++;
 	}
 
@@ -56,8 +55,11 @@ int readlines(struct paramStr *p, FILE *stream)
 }
 
 
-int cmpFromBegin (const char* firstLinePtr, const char* secondLinePtr)
+int cmpFromBegin (struct paramStr *p, int adressFirstStr, int adressSecondStr)
 {
+	const char* firstLinePtr  = (*(p + adressFirstStr )).lineptr; 
+	const char* secondLinePtr = (*(p + adressSecondStr)).lineptr;
+
 	int i = 0;
 
 	for (i = 0; firstLinePtr[i] == secondLinePtr[i]; i++)
@@ -71,23 +73,45 @@ int cmpFromBegin (const char* firstLinePtr, const char* secondLinePtr)
 	return firstLinePtr[i] - secondLinePtr[i];
 }
 
+int cmpFromEnd (struct paramStr *p, int adressFirstStr, int adressSecondStr)
+{
+	const char* firstLinePtr  = (*(p + adressFirstStr )).lineptr; 
+	const char* secondLinePtr = (*(p + adressSecondStr)).lineptr;
+
+	int i = (*(p + adressFirstStr )).countSymb;
+	int j = (*(p + adressSecondStr)).countSymb;
+
+	for (; i >= 0; i--)
+	{
+		for (; j >= 0; j--)
+		{
+			if (firstLinePtr[i] != secondLinePtr[j] || firstLinePtr[i] == '\n')
+			{
+				break;
+			}
+		}
+	}
+
+	return firstLinePtr[i] - secondLinePtr[j];
+}
+
 
 void swap (struct paramStr *p, int adressFirstString, int adressSecondString)
 {
 	char* temp = (*(p + adressSecondString)).lineptr;
 
-	(*(p + adressSecondString)).lineptr = (*(p + adressFirstString)).lineptr;
-	(*(p + adressFirstString)).lineptr = temp;
+	(*(p + adressSecondString)).lineptr  = (*(p + adressFirstString)).lineptr;
+	(*(p + adressFirstString)). lineptr  = temp;
 }
 
 
-void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (const char*, const char*))
+void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (struct paramStr *p, int, int))
 {
 	for (int i = 0; i < nlines - 1; i++)
 	{
 		for (int j = 0; j < nlines - 1; j++)
 		{
-			if ((*cmpFunc) ((*(p+j)).lineptr, (*(p+j+1)).lineptr) > 0)
+			if ((*cmpFunc) (p, j, j+1) > 0)
 			{
 				swap(p, j + 1, j);
 			}

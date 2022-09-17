@@ -18,7 +18,7 @@
 /*! \page authors 	Authors of the program
  * 
 *   \authors 		Tikhonov D.R.
-* 	\version 		1.4
+* 	\version 		Fix 1.4.1
 * 	\date 			September, 2022
 * 	\bug 			not found yet.
 * 	\warning 		There are no such.
@@ -54,7 +54,7 @@ int main()
 
     fclose (ptrFile);
 
-    qsort        (ptrStr, nlines - 1, &cmpFromBegin);
+    qsort        (ptrStr, nlines - 1, &cmpFromEnd);
     writelines   (ptrStr, nlines - 1);
 
     clearBuffer  (ptrStr, nlines);

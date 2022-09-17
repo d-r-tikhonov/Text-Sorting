@@ -13,7 +13,7 @@ struct paramStr
 /// @param[in] nlines 	The stream from where the characters are read
 /// @return 			Number of characters read
 ///////////////////////////////////////////////////////////////
-size_t getlineFile(char **string, FILE *stream);
+size_t getlineFile (char **string, FILE *stream);
 
 
 ///////////////////////////////////////////////////////////////
@@ -23,7 +23,8 @@ size_t getlineFile(char **string, FILE *stream);
 /// @return 					NULL, in case of equality
 /// @return 					positive value if the first row is higher in order than the second; negative value otherwise
 ///////////////////////////////////////////////////////////////
-int cmpFromBegin (const char* firstLinePtr, const char* secondLinePtr);
+int cmpFromBegin (struct paramStr *p, int adressFirstStr, int adressSecondStr);
+int cmpFromEnd	 (struct paramStr *p, int adressFirstStr, int adressSecondStr);
 
 
 ///////////////////////////////////////////////////////////////
@@ -40,7 +41,7 @@ void swap (struct paramStr *p, int adressFirstString, int adressSecondString);
 /// @param[in] lineptr				Array of pointers to strings	
 /// @param[in] adressFirstString 	Number of rows
 ///////////////////////////////////////////////////////////////
-void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (const char*, const char*));
+void qsort (struct paramStr *p, int nlines, int (*cmpFunc) (struct paramStr *p, int adressFirstString, int adressSecondString));
 
 
 ///////////////////////////////////////////////////////////////
