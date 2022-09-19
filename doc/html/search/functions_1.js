@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iseqstring_0',['isEqString',['../string__func__operation_8cpp.html#a9bc0739f73d7ac59f60a5fb5ce28dc04',1,'isEqString(char *firstLinePtr, char *secondLinePtr):&#160;string_func_operation.cpp'],['../string__func__operation_8h.html#a9bc0739f73d7ac59f60a5fb5ce28dc04',1,'isEqString(char *firstLinePtr, char *secondLinePtr):&#160;string_func_operation.cpp']]]
+  ['getlinefile_0',['getlineFile',['../string__func__operation_8cpp.html#abd65355e142b4b8ffbee15bac7f1e16e',1,'getlineFile(char **string, FILE *stream):&#160;string_func_operation.cpp'],['../string__func__operation_8h.html#abd65355e142b4b8ffbee15bac7f1e16e',1,'getlineFile(char **string, FILE *stream):&#160;string_func_operation.cpp']]]
 ];

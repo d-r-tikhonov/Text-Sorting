@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iseqstring_0',['isEqString',['../string__func__operation_8cpp.html#a9bc0739f73d7ac59f60a5fb5ce28dc04',1,'isEqString(char *firstLinePtr, char *secondLinePtr):&#160;string_func_operation.cpp'],['../string__func__operation_8h.html#a9bc0739f73d7ac59f60a5fb5ce28dc04',1,'isEqString(char *firstLinePtr, char *secondLinePtr):&#160;string_func_operation.cpp']]]
+  ['how_20to_20use_20the_20program_3f_0',['How to use the program?',['../guide.html',1,'index']]]
 ];

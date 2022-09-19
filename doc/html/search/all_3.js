@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['how_20to_20use_20the_20program_3f_0',['How to use the program?',['../guide.html',1,'index']]]
+  ['getlinefile_0',['getlineFile',['../string__func__operation_8cpp.html#abd65355e142b4b8ffbee15bac7f1e16e',1,'getlineFile(char **string, FILE *stream):&#160;string_func_operation.cpp'],['../string__func__operation_8h.html#abd65355e142b4b8ffbee15bac7f1e16e',1,'getlineFile(char **string, FILE *stream):&#160;string_func_operation.cpp']]]
 ];
