@@ -27,7 +27,7 @@
 * 
 */
 
-// #define NDEBUG
+#define NDEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -43,12 +43,12 @@ enum cmdArgs
     CMP_END   = 1,
 };
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
     FILE* inputFile = fopen ("inputFile.txt", "r");
     if (inputFile == nullptr) 
     {
-        printf ("Error opening files!\n");
+        printf ("Error opening file! Name of file: inputFile.txt\n");
         return errno;
     }
 
@@ -62,43 +62,33 @@ int main(int argc, char* argv[])
         case CMP_BEGIN:
             funcPtr = cmpFromBegin;
             break;
+
         case CMP_END:
             funcPtr = cmpFromEnd;
             break;
+
         default:
-            printf("Error! In switch(cmdArgsStatus)!");
+            printf("Error! In switch(cmdArgsStatus)! funcPtr = %d", funcPtr);
             break;
     }
 
-    char* buffer = cpyFileToBuffer (inputFile);
-    assert (buffer != nullptr);
-
-    const size_t nLines = nLinesFile (buffer);
-    struct lines* string = (lines* ) calloc (nLines, sizeof(lines));
-
     if (fclose (inputFile) != 0)
-        printf("File closing error!");
+        printf("Error opening file! Name of file: inputFile.txt\n");
 
-    size_t readLinesReturn = readLines (buffer, string);
-    assert (nLines == readLinesReturn);
+    struct lines* string = readLines(inputFile);
 
-    bubbleSort (string, nLines, sizeof(lines), (int (*) (const void*, const void*)) funcPtr);
+    // bubbleSort (string, nLines, sizeof(lines), (int (*) (const void*, const void*)) funcPtr);
 
-    FILE* outputFile = fopen ("outputFile.txt", "w");
-    if (outputFile == nullptr) 
-    {
-        printf ("Error opening files!\n");
-        return 1;
-    }
-    writeLines (string, nLines, stdout);
+    // FILE* outputFile = fopen ("outputFile.txt", "w");
+    // if (outputFile == nullptr) 
+    // {
+    //     printf ("Error opening file! Name of file: outputFile.txt\n");
+    //     return errno;
+    // }
+    // writeLines (string, nLines, outputFile);
 
-    if (fclose (outputFile) != 0)
-        printf("File closing error!");
+    // if (fclose (outputFile) != 0)
+    //     printf("File closing error! Name of file: outputFile.txt");
 
-    memClr(string, nLines, buffer);
-
-    assert(string == nullptr);
-    assert(buffer == nullptr);
-
-	return 0;
+	return 1;
 }

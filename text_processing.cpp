@@ -4,10 +4,30 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <TXLib.h>
 
 #include "text_processing.h"
 
 static long fileSize (FILE* stream);
+static long fastSize (FILE* stream);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+static long fastSize (FILE* stream) 
+{
+	assert (stream != nullptr);
+
+	long curPos = ftell(stream);
+
+	fseek (stream, 0L, SEEK_END);
+	long size = ftell (stream);
+	if (size == -1)
+		return -1;
+
+	fseek(stream, curPos, SEEK_SET);
+
+	return size;
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -48,14 +68,14 @@ char* cpyFileToBuffer (FILE* stream)
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-size_t nLinesFile (char* buffer)
+size_t nLinesFile (char* buffer, char separator)
 {
 	assert (buffer != 0);
 
 	size_t nLines = 0;
 	char* ptrN = buffer;
 
-	while ((ptrN = strchr (ptrN, '\n')) != nullptr)
+	while ((ptrN = strchr (ptrN, separator)) != nullptr)
 	{
 		nLines++;
 		ptrN++;
@@ -66,22 +86,29 @@ size_t nLinesFile (char* buffer)
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-size_t readLines (char* buffer, struct lines* string)
+struct lines* readLines (FILE* stream)
 {
+	char* buffer = cpyFileToBuffer(stream);
+	assert(buffer != nullptr);
+
 	char* ptrStart = buffer;
 	char* ptrEnd   = buffer;
 
-	size_t nLines = 0;
+	const size_t nLines = nLinesFile (buffer, '\n');
+    struct lines* string = (lines* ) calloc (nLines, sizeof(lines));
+
+    size_t i = 0;
 	while ((ptrEnd = strchr (ptrStart, '\n')) != nullptr)
 	{
-		string[nLines].start = ptrStart;
-		string[nLines].end 	 = ptrEnd;
+		string[i].start = ptrStart;
+		string[i].end 	 = ptrEnd;
 		
 		ptrStart = ptrEnd + 1;
-		nLines++;
+		i++;
 	}
+	assert(i == nLines);
 
-	return nLines;
+	return string;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,17 +134,21 @@ int cmpFromBegin (const struct lines* firstString, const struct lines* secondStr
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-int cmpFromEnd (const struct lines* firstString, const struct lines* secondString) 
+int cmpFromEnd (const struct lines* firstString, const struct lines* secondString) ///
 {
 	assert(firstString != secondString);
+
+	// const struct lines* firstString = (const lines *) firstStringParam;
 
     const char* firstStr  =  firstString->end;
     const char* secondStr = secondString->end;
 
     while (*firstStr == *secondStr) 
     {
-      	if (*firstStr == *(firstString->start))
-        	break;
+      	if (*firstStr == *(firstString->start) || *secondStr == *(secondString->start))
+      	{
+      		break;///выше, та которая меньше символов
+      	}
 
          firstStr--;
         secondStr--;
@@ -128,7 +159,7 @@ int cmpFromEnd (const struct lines* firstString, const struct lines* secondStrin
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-void swap (void* ptr, size_t firstAdress, size_t secondAdress)///void* void* size
+void swap (void* ptr, size_t firstAdress, size_t secondAdress)
 {
 	assert(firstAdress != secondAdress);
 
@@ -150,7 +181,7 @@ void bubbleSort (void *ptr, size_t nLines, size_t size, int (*cmpFunc)(const voi
 
 	for (size_t i = 0; i < nLines; i++)
 	{		
-		for (size_t j = 0; j < nLines - 1; j++)
+		for (size_t j = 0; j < nLines - i - 1; j++)
 		{
 			if ((*cmpFunc) (data + size * j, data + size * (j + 1)) > 0)
 			{
@@ -164,32 +195,24 @@ void bubbleSort (void *ptr, size_t nLines, size_t size, int (*cmpFunc)(const voi
 
 void writeLines (const struct lines* string, size_t nLines, FILE* stream)
 {	
-	// fwrite("Sorted rows\n", sizeof(char), sizeof("Sorted rows\n")/sizeof(char), stream);
-
 	for (size_t i = 0; i < nLines; i++)
 	{
 		fwrite (string[i].start, sizeof(char), (string[i].end - string[i].start)/sizeof(char) + 1, stream);
 	}
-
-	// fwrite("~~\n", sizeof(char), sizeof("~~\n")/sizeof(char), stream);
 }	
 	
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-void freeLines (struct lines* string, size_t nLines)
-{				
-	for (size_t i = 0; i < nLines; i++)
-	{
-		free (string);
-	}
+void freeLines (struct lines* string)
+{			
+	free(string);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 void clearBuffer (char* buffer)
 {
-	if (buffer != nullptr)
-		free (buffer);
+	free (buffer);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,5 +220,5 @@ void clearBuffer (char* buffer)
 void memClr (struct lines* string, size_t nLines, char* buffer)
 {
 	clearBuffer (buffer);
-	freeLines (string, nLines);
+	freeLines (string);
 }
